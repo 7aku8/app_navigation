@@ -1,102 +1,51 @@
 <script setup lang="ts">
 import {computed, ref} from 'vue'
 
-const active = ref<string>('home');
-const setActive = ({ name }: { name: string}) => active.value = name;
+interface MenuElement {
+  name: string;
+  key: string;
+  icon: string;
+}
 
-const homeActive = computed<boolean>(() => active.value === 'home');
-const profileActive = computed<boolean>(() => active.value === 'profile');
-const messagesActive = computed<boolean>(() => active.value === 'messages');
-const settingsActive = computed<boolean>(() => active.value === 'settings');
-const galleryActive = computed<boolean>(() => active.value === 'gallery');
+const elements = ref<MenuElement[]>([
+  { name: 'Home', key: 'home', icon: 'home-outline' },
+  { name: 'Profile', key: 'profile', icon: 'person-outline' },
+  { name: 'Messages', key: 'messages', icon: 'chatbubble-outline' },
+  { name: 'Settings', key: 'settings', icon: 'settings-outline' },
+  { name: 'Gallery', key: 'gallery', icon: 'camera-outline' },
+])
+
+const active = ref<MenuElement>(elements.value[0]);
+const activeIndex = computed<number>(() => elements.value.indexOf(active.value));
+const setActive = ({ element }: { element: MenuElement }) => active.value = element;
 </script>
 
 <template>
   <div class="navigation">
     <ul class="navigation__list">
       <li
-        class="navigation__list__item"
-        :class="{ 'navigation__list__item--active': homeActive }"
+        v-for="element in elements"
+        :key="element.key"
 
-        @click="setActive({ name: 'home' })"
+        class="navigation__list__item"
+        :class="{ 'navigation__list__item--active': element.key === active.key }"
+
+        @click="setActive({ element })"
       >
         <a
           href="#"
           class="navigation__list__item__link"
         >
           <span class="navigation__list__item__icon">
-            <ion-icon name="home-outline" />
+            <ion-icon :name='element.icon' />
           </span>
-          <span class="navigation__list__item__text">Home</span>
-        </a>
-      </li>
-      <li
-        class="navigation__list__item"
-        :class="{ 'navigation__list__item--active': profileActive }"
-
-        @click="setActive({ name: 'profile' })"
-      >
-        <a
-          href="#"
-          class="navigation__list__item__link"
-        >
-          <span class="navigation__list__item__icon">
-            <ion-icon name="person-outline" />
-          </span>
-          <span class="navigation__list__item__text">Profile</span>
-        </a>
-      </li>
-      <li
-        class="navigation__list__item"
-        :class="{ 'navigation__list__item--active': messagesActive }"
-
-        @click="setActive({ name: 'messages' })"
-      >
-        <a
-          href="#"
-          class="navigation__list__item__link"
-        >
-          <span class="navigation__list__item__icon">
-            <ion-icon name="chatbubble-outline" />
-          </span>
-          <span class="navigation__list__item__text">Messages</span>
-        </a>
-      </li>
-      <li
-        class="navigation__list__item"
-        :class="{ 'navigation__list__item--active': settingsActive }"
-
-        @click="setActive({ name: 'settings' })"
-      >
-        <a
-          href="#"
-          class="navigation__list__item__link"
-        >
-          <span class="navigation__list__item__icon">
-            <ion-icon name="settings-outline" />
-          </span>
-          <span class="navigation__list__item__text">Settings</span>
-        </a>
-      </li>
-      <li
-        class="navigation__list__item"
-        :class="{ 'navigation__list__item--active': galleryActive }"
-
-        @click="setActive({ name: 'gallery' })"
-      >
-        <a
-          href="#"
-          class="navigation__list__item__link"
-        >
-            <span class="navigation__list__item__icon">
-            <ion-icon name="camera-outline" />
-          </span>
-          <span class="navigation__list__item__text">Gallery</span>
+          <span class="navigation__list__item__text">{{ element.name }}</span>
         </a>
       </li>
       <div
         class="navigation__indicator"
-      ></div>
+        :style="`transform: translateX(calc(70px * ${ activeIndex }))`"
+      />
     </ul>
   </div>
 </template>
@@ -111,7 +60,7 @@ const galleryActive = computed<boolean>(() => active.value === 'gallery');
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 15px;
+  border-radius: 10px 10px 15px 15px;
 
   &__list {
     width: 350px;
@@ -152,7 +101,7 @@ const galleryActive = computed<boolean>(() => active.value === 'gallery');
         line-height: 75px;
         font-size: 1.5em;
         text-align: center;
-        transition: .3s;
+        transition: .65s;
         color: var(--icon-color);
       }
 
@@ -169,6 +118,14 @@ const galleryActive = computed<boolean>(() => active.value === 'gallery');
         opacity: 0;
         transform: translateY(20px);
       }
+
+      &:nth-child(1) &--active ~.navigation__indicator {
+        transform: translateX(calc(70px * 0));
+      }
+      &:nth-child(2) &--active ~.navigation__indicator {
+        transform: translateX(calc(70px * 1));
+        background-color: green !important;
+      }
     }
   }
 
@@ -182,7 +139,7 @@ const galleryActive = computed<boolean>(() => active.value === 'gallery');
     border-radius: 50%;
     border: 6px solid var(--active-border);
 
-    transition: .3s;
+    transition: .6s;
 
     &::before {
       content: '';

@@ -55,7 +55,7 @@ import Navigation from './components/Navigation.vue'
   max-height: 90vh;
   max-width: 90vw;
 
-  padding: 20px 7px !important;
+  padding: 20px 15px !important;
 
   display: flex;
 
