@@ -24,6 +24,8 @@ import Navigation from './components/Navigation.vue'
   --nav-bg: #FFFFFF;
   --icon-color: var(--bg-color);
   --text-color: var(--bg-color);
+  --active-bg: #d34e20;
+  --active-border: var(--bg-color);
 }
 
 #app {

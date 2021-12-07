@@ -1,15 +1,25 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 
-// defineProps<{ msg: string }>()
+const active = ref<string>('home');
+const setActive = ({ name }: { name: string}) => active.value = name;
 
-const count = ref(0)
+const homeActive = computed<boolean>(() => active.value === 'home');
+const profileActive = computed<boolean>(() => active.value === 'profile');
+const messagesActive = computed<boolean>(() => active.value === 'messages');
+const settingsActive = computed<boolean>(() => active.value === 'settings');
+const galleryActive = computed<boolean>(() => active.value === 'gallery');
 </script>
 
 <template>
   <div class="navigation">
     <ul class="navigation__list">
-      <li class="navigation__list__item navigation__list__item--active">
+      <li
+        class="navigation__list__item"
+        :class="{ 'navigation__list__item--active': homeActive }"
+
+        @click="setActive({ name: 'home' })"
+      >
         <a
           href="#"
           class="navigation__list__item__link"
@@ -20,7 +30,12 @@ const count = ref(0)
           <span class="navigation__list__item__text">Home</span>
         </a>
       </li>
-      <li class="navigation__list__item">
+      <li
+        class="navigation__list__item"
+        :class="{ 'navigation__list__item--active': profileActive }"
+
+        @click="setActive({ name: 'profile' })"
+      >
         <a
           href="#"
           class="navigation__list__item__link"
@@ -31,7 +46,12 @@ const count = ref(0)
           <span class="navigation__list__item__text">Profile</span>
         </a>
       </li>
-      <li class="navigation__list__item">
+      <li
+        class="navigation__list__item"
+        :class="{ 'navigation__list__item--active': messagesActive }"
+
+        @click="setActive({ name: 'messages' })"
+      >
         <a
           href="#"
           class="navigation__list__item__link"
@@ -42,7 +62,12 @@ const count = ref(0)
           <span class="navigation__list__item__text">Messages</span>
         </a>
       </li>
-      <li class="navigation__list__item">
+      <li
+        class="navigation__list__item"
+        :class="{ 'navigation__list__item--active': settingsActive }"
+
+        @click="setActive({ name: 'settings' })"
+      >
         <a
           href="#"
           class="navigation__list__item__link"
@@ -53,7 +78,12 @@ const count = ref(0)
           <span class="navigation__list__item__text">Settings</span>
         </a>
       </li>
-      <li class="navigation__list__item">
+      <li
+        class="navigation__list__item"
+        :class="{ 'navigation__list__item--active': galleryActive }"
+
+        @click="setActive({ name: 'gallery' })"
+      >
         <a
           href="#"
           class="navigation__list__item__link"
@@ -81,7 +111,7 @@ const count = ref(0)
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
+  border-radius: 15px;
 
   &__list {
     width: 350px;
@@ -139,6 +169,46 @@ const count = ref(0)
         opacity: 0;
         transform: translateY(20px);
       }
+    }
+  }
+
+  &__indicator {
+    position: absolute;
+    top: -55%;
+    width: 70px;
+    height: 70px;
+
+    background-color: var(--active-bg);
+    border-radius: 50%;
+    border: 6px solid var(--active-border);
+
+    transition: .3s;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+
+      top: 55%;
+      left: -20px;
+      background-color: transparent;
+      border-top-right-radius: 20px;
+
+      box-shadow: 0 -10px 0 0 var(--bg-color);
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+
+      top: 55%;
+      right: -20px;
+      background-color: transparent;
+      border-top-left-radius: 20px;
+
+      box-shadow: 0 -10px 0 0 var(--bg-color);
     }
   }
 }
